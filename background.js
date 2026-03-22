@@ -50,10 +50,18 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       const result = await response.json();
       const summary = result.choices?.[0]?.message?.content || '总结失败';
       
-      // Show result in a new tab or alert
-      chrome.tabs.sendMessage(tab.id, { summary });
+      // Show floating panel
+      chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ['floating.js'],
+        args: [{ type: 'summary', content: summary }]
+      });
     } catch (e) {
-      chrome.tabs.sendMessage(tab.id, { error: e.message });
+      chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ['floating.js'],
+        args: [{ type: 'error', content: e.message }]
+      });
     }
   }
 });
