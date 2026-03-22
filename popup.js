@@ -73,6 +73,18 @@ document.getElementById('extractContent').addEventListener('click', async () => 
     JSON.stringify(results[0].result, null, 2);
 });
 
+// Load saved API key on startup
+chrome.storage.local.get(['minimaxApiKey'], (result) => {
+  if (result.minimaxApiKey) {
+    document.getElementById('apiKey').value = result.minimaxApiKey;
+  }
+});
+
+// Save API key when user types
+document.getElementById('apiKey').addEventListener('change', (e) => {
+  chrome.storage.local.set({ minimaxApiKey: e.target.value });
+});
+
 // AI Summarize (MiniMax)
 document.getElementById('summarize').addEventListener('click', async () => {
   const apiKey = document.getElementById('apiKey').value;
@@ -80,6 +92,9 @@ document.getElementById('summarize').addEventListener('click', async () => {
     alert('请输入 API Key');
     return;
   }
+  
+  // Auto-save for next time
+  chrome.storage.local.set({ minimaxApiKey: apiKey });
 
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   
