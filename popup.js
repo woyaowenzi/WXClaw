@@ -129,3 +129,13 @@ document.getElementById('summarize').addEventListener('click', async () => {
     document.getElementById('summaryResult').textContent = '错误: ' + e.message;
   }
 });
+
+// Listen for messages from background (context menu)
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.summary) {
+    alert('📝 AI 总结：\n\n' + request.summary);
+  }
+  if (request.error) {
+    alert('❌ 错误：' + request.error);
+  }
+});
