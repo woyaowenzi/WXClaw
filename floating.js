@@ -1,7 +1,5 @@
 // Inject floating panel into page
-(function() {
-  const data = arguments[0];
-  
+function showFloatingPanel(data) {
   // Remove existing panel if any
   const existing = document.getElementById('ai-summary-floating');
   if (existing) existing.remove();
@@ -86,4 +84,11 @@
   }, 30000);
   
   document.body.appendChild(panel);
-})();
+}
+
+// Run with data passed from background
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'showFloating') {
+    showFloatingPanel(message.data);
+  }
+});
