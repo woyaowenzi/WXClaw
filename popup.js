@@ -73,7 +73,7 @@ document.getElementById('extractContent').addEventListener('click', async () => 
     JSON.stringify(results[0].result, null, 2);
 });
 
-// AI Summarize
+// AI Summarize (MiniMax)
 document.getElementById('summarize').addEventListener('click', async () => {
   const apiKey = document.getElementById('apiKey').value;
   if (!apiKey) {
@@ -92,14 +92,14 @@ document.getElementById('summarize').addEventListener('click', async () => {
   document.getElementById('summaryResult').textContent = '正在总结...';
 
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://api.minimax.chat/v1/text/chatcompletion_v2', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
+        model: 'MiniMax-M2.5',
         messages: [{
           role: 'user',
           content: `请用50字总结以下网页内容：\n\n${content}`
@@ -109,7 +109,7 @@ document.getElementById('summarize').addEventListener('click', async () => {
 
     const data = await response.json();
     document.getElementById('summaryResult').textContent = 
-      data.choices?.[0]?.message?.content || '总结失败';
+      data.choices?.[0]?.message?.content || JSON.stringify(data);
   } catch (e) {
     document.getElementById('summaryResult').textContent = '错误: ' + e.message;
   }
